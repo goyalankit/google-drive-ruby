@@ -156,7 +156,7 @@ module GoogleDrive
           return file_by_id(url_to_id(url))
         end
 
-        def create_collection(title = "Flagship") {
+        def create_collection(title = "Flagship")
           file = self.drive.files.insert.request_schema.new({
               "title" => title,
               "mimeType" => "application/vnd.google-apps.folder",
@@ -165,7 +165,7 @@ module GoogleDrive
               :api_method => self.drive.files.insert,
               :body_object => file)
           return wrap_api_file(api_result.data)
-        }
+        end
 
         # Returns list of spreadsheets for the user as array of GoogleDrive::Spreadsheet.
         # You can specify query parameters e.g. "title", "title-exact".
