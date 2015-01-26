@@ -159,7 +159,7 @@ module GoogleDrive
         def create_collection(title = "Flagship")
           file = self.drive.files.insert.request_schema.new({
               "title" => title,
-              "mimeType" => "application/vnd.google-apps.folder",
+              "mimeType" => "application/vnd.google-apps.folder"
           })
           api_result = execute!(
               :api_method => self.drive.files.insert,
