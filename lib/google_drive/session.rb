@@ -41,14 +41,18 @@ module GoogleDrive
         end
 
         def initialize(options={}, proxy = nil)
-
+        puts "Options received are #{options}"
           if proxy
             raise(
                 ArgumentError,
                 "Specifying a proxy object is no longer supported. Set ENV[\"http_proxy\"] instead.")
           end
 
-          client_or_access_token = options.try(:client_or_access_token)
+        if options[:client_or_access_token].nil?
+            puts "Client or access token is not present. Options are #{options}"
+        else
+          client_or_access_token = options[:client_or_access_token]
+      end
           
           if client_or_access_token
             api_client_params = {
