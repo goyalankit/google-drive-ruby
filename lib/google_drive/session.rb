@@ -31,8 +31,8 @@ module GoogleDrive
         extend(Util)
 
         # The same as GoogleDrive.login_with_oauth.
-        def self.login_with_oauth(client_or_access_token, proxy = nil)
-          return Session.new(client_or_access_token, proxy)
+        def self.login_with_oauth(options={}, proxy = nil)
+          return Session.new(options, proxy)
         end
 
         # Creates a dummy GoogleDrive::Session object for testing.
@@ -40,7 +40,7 @@ module GoogleDrive
           return Session.new(nil)
         end
 
-        def initialize(client_or_access_token, proxy = nil)
+        def initialize(options={}, proxy = nil)
 
           if proxy
             raise(
@@ -48,6 +48,8 @@ module GoogleDrive
                 "Specifying a proxy object is no longer supported. Set ENV[\"http_proxy\"] instead.")
           end
 
+          client_or_access_token = options.try(:client_or_access_token)
+          
           if client_or_access_token
             api_client_params = {
               :application_name => "google_drive Ruby library",
@@ -56,12 +58,15 @@ module GoogleDrive
             case client_or_access_token
               when Google::APIClient
                 client = client_or_access_token
+                client.authorization.refresh_token = options[:refresh_token] if options[:refresh_token]
               when String
                 client = Google::APIClient.new(api_client_params)
                 client.authorization.access_token = client_or_access_token
+                client.authorization.refresh_token = options[:refresh_token] if options[:refresh_token]
               when OAuth2::AccessToken
                 client = Google::APIClient.new(api_client_params)
                 client.authorization.access_token = client_or_access_token.token
+                client.authorization.refresh_token = options[:refresh_token] if options[:refresh_token]
               when OAuth::AccessToken
                 raise(
                     ArgumentError,
