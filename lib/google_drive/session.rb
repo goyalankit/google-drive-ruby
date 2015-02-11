@@ -362,6 +362,10 @@ module GoogleDrive
         def upload_from_media(media, title = "Untitled", params = {})
           file = self.drive.files.insert.request_schema.new({
             "title" => title,
+            "parents": [{
+                "kind": "drive#fileLink",
+                "id": params[:folder_id]
+          }]
           })
           api_result = execute!(
               :api_method => self.drive.files.insert,
